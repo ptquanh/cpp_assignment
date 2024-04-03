@@ -1,0 +1,251 @@
+#include <iostream>
+#include <limits>
+using namespace std;
+#include <vector>
+#include <map>
+
+
+class Animal {
+private:
+    // name age weight and length
+    string type;
+    string name;
+    int age;
+    double weight;
+    double length;
+public:
+    Animal(){
+        this->type = "Unknown";
+        this->name = "Unknown";
+        this->age = 0;
+        this->weight = 0;
+        this->length = 0;
+    };
+    Animal(string type, string name, int age, double weight, double length){
+        this->type = type;
+        this->name = name;
+        this->age = age;
+        this->weight = weight;
+        this->length = length;
+    }
+    void setType(string type){
+        this->type = type;
+    }
+    void setName(string name){
+        this->name = name;
+    }
+    void setAge(int age){
+        this->age=age;
+    }
+    void setWeight(double weight){
+        this->weight = weight;
+    }
+    void setHeight(double length){
+        this->length = length;
+    }
+    string getType() const{
+        return type;
+    }
+    string getName() const{
+        return name;
+    }
+    int getAge() const{
+        return age;
+    }
+    double getWeight() const{
+        return weight;
+    }
+    double getLength() const{
+        return length;
+    }
+    void setAnimal(){
+        string type;
+        string name;
+        int age;
+        double weight;
+        double length;
+        cout<<"Input Type: ";
+        getline(cin, type);
+        cout<<"Input Name: ";
+        getline(cin, name);
+        cout<<"Input Age: ";
+        while(!(cin>>age) || age<0){
+            cout<<"Invalid Value! Please input again: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+        };
+        cout<<"Enter Weight: ";
+        while(!(cin>>weight) || weight<0){
+            cout<<"Invalid Value! Please input again: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+        };
+        cout<<"Enter Length: ";
+        while(!(cin>>length) || length<0){
+            cout<<"Invalid Value! Please input again: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+        };
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        this->type = type;
+        this->name = name;
+        this->age = age;
+        this->weight = weight;
+        this->length = length;
+    };
+    virtual void showAnimal(){
+        cout<<"Type: "<<type <<endl;
+        cout<<"Name: "<< name <<endl;
+        cout<<"Age: "<< age <<endl;
+        cout<<"Weight: "<< weight <<endl;
+        cout<<"Length: "<< length <<endl;
+    }
+};
+
+class myZoo{
+private:
+    vector<Animal> animal;
+    map<string, map<string, map<string, string>>> feedingStatus; 
+public:
+    myZoo(){};
+    void addAnimal(const Animal& animal){
+        (this->animal).push_back(animal);
+        feedingStatus[animal.getType()][animal.getName()];
+    }
+    
+    void addFeedingStatus(){
+        string type;
+        string name ;
+        int numDay;
+        string day;
+        int dayStatus;
+        string status;
+        cout<<"Enter Type: ";
+        getline(cin, type);
+        cout<<"Enter Name: ";
+        getline(cin, name);
+        cout<<"Input n - n is the day of week"<<endl;
+        cout << " 1. Monday" <<endl;
+        cout << " 2. Tuesday" <<endl;
+        cout << " 3. Wednesday" <<endl;
+        cout << " 4. Thursday" <<endl;
+        cout << " 5. Friday" <<endl;
+        cout << " 6. Saturday" <<endl;
+        cout << " 7. Sunday" <<endl;
+        cout << "Enter :";
+        while(!(cin>>numDay) || numDay > 7 || numDay < 1){
+            cout<<"Invalid Value! Please input again: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        cout<<"1=FED or 0=UNFED"<< name <<endl;
+        while(!(cin>>dayStatus) || dayStatus<0 || dayStatus>1){
+            cout<<"Invalid Value! Please input again: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        if(numDay==1){
+            day="Mon";
+        }else if(numDay==2){
+            day="Tue";
+        }else if(numDay==3){
+            day="Wed";
+        }else if(numDay==4){
+            day="Thu";
+        }else if(numDay==5){
+            day="Fri";
+        }else if(numDay==6){
+            day="Sat";
+        }else if(numDay==7){
+            day="Sun";
+        };
+
+        if(dayStatus == 1){
+            status = "FED";
+        }else{
+            status = "UNFED";
+        }
+        feedingStatus[type][name][day] = status;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    }
+
+    void showFeedingStatus(){
+        vector<string> days = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+        cout<<"Feeding Status Of All Animals In The Zoo"<<endl;
+        for(const auto&[type,nameAndOther] : feedingStatus){
+            cout<<"- Type: "<<type<<endl;;
+            for(const auto&[name, statusMap] : nameAndOther){
+                cout<<"  + Name: "<< name << endl;
+                for(const auto& day : days){
+                    if(statusMap.find(day) != statusMap.end()){
+                        cout<<"    * Day: "<<day<<", Status: "<< statusMap.at(day)<<endl;
+                    }else{
+                        cout<<"    * Day: "<<day<<", Status: UnFed"<<endl;
+                    }
+                } 
+            }
+        }
+    };
+    
+    void showFeedingStatus(const string& type, const string& name){
+        vector<string> days = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+        cout<<"- Feeding Status Of "<< type << endl;
+        cout<<"  + Name:  "<< name << endl;
+        for(const auto& day : days){
+            if(feedingStatus[type][name].find(day) != feedingStatus[type][name].end()){
+                cout<<"    * Day: "<<day<<", Status: "<< feedingStatus[type][name].at(day)<<endl;
+            }else{
+                cout<<"    * Day: "<<day<<", Status: UnFed"<<endl;
+            }
+        }
+    };
+};
+
+
+int main(){
+    myZoo soThu;
+    int num1;
+    char chr1;
+    while(true){
+        cout<<"1. Add New Animal And Detail Of Them: "<<endl;
+        cout<<"2. Add Feeding Status Of Animal"<<endl;
+        cout<<"3. Show Infomation Of All Animals"<<endl;
+        cout<<"4. Show Infomation Of One Animal"<<endl;
+        cout<<"Choose Funtion: ";
+        while ( !(cin>>num1) || num1>4 || num1<1){
+            cout<<"Invalid Value, Enter Again:";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        if(num1 == 1){
+            cout <<" Enter The Information Of Your Animal" << endl;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            Animal animal;
+            animal.setAnimal();
+            soThu.addAnimal(animal);
+        }else if((num1 == 2)){
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            soThu.addFeedingStatus();
+        }else if((num1 == 3)){
+            soThu.showFeedingStatus();
+        }else if((num1 == 4)){
+            
+        };
+        
+        
+        cout<<"y=continue and n=stop"<<endl;
+        while (!(cin>>chr1) || (chr1 != 'y' && chr1!='n')){
+            cout<<"Invalid Value! Please input again: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        };
+        if(chr1 == 'y'){
+            continue;
+        }else{
+            cout << "The Program Is End";
+            break;
+        }
+            
+    }
+};
